@@ -1,0 +1,163 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #6a8759;}
+.s4 { color: #6897bb;}
+.s5 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">os</span>
+<span class="s0">import </span><span class="s1">data</span>
+<span class="s0">import </span><span class="s1">math</span>
+<span class="s0">from </span><span class="s1">art </span><span class="s0">import </span><span class="s1">title</span>
+<span class="s0">from </span><span class="s1">sys </span><span class="s0">import </span><span class="s1">exit</span>
+
+
+<span class="s0">def </span><span class="s1">clear():</span>
+    <span class="s2">&quot;&quot;&quot;It was supposed to clear te screen, but doesn't work&quot;&quot;&quot;</span>
+    <span class="s0">return </span><span class="s1">os.system(</span><span class="s3">'cls' </span><span class="s0">if </span><span class="s1">os.name == </span><span class="s3">'nt' </span><span class="s0">else </span><span class="s3">'clear'</span><span class="s1">)</span>
+
+
+<span class="s0">def </span><span class="s1">end():</span>
+    <span class="s1">done = input(</span><span class="s3">'Insert &quot;y&quot; to restart: '</span><span class="s1">)</span>
+    <span class="s0">if </span><span class="s1">done == </span><span class="s3">'y'</span><span class="s1">:</span>
+        <span class="s1">clear()</span>
+        <span class="s1">coffee_machine()</span>
+
+
+<span class="s0">def </span><span class="s1">check_choice(user_choice):</span>
+    <span class="s2">&quot;&quot;&quot;Checks whether te user's choice is one of the maintenance ones and returns them&quot;&quot;&quot;</span>
+    <span class="s0">if </span><span class="s1">user_choice == </span><span class="s3">'off'</span><span class="s1">:</span>
+        <span class="s1">exit()</span>
+    <span class="s0">elif </span><span class="s1">user_choice == </span><span class="s3">'report'</span><span class="s1">:</span>
+        <span class="s1">print(</span><span class="s3">f'''</span>
+        <span class="s3">Water: </span><span class="s0">{</span><span class="s1">data.resources[</span><span class="s3">'water'</span><span class="s1">]</span><span class="s0">} </span><span class="s3">ml</span>
+        <span class="s3">Milk: </span><span class="s0">{</span><span class="s1">data.resources[</span><span class="s3">'milk'</span><span class="s1">]</span><span class="s0">} </span><span class="s3">ml</span>
+        <span class="s3">Coffee: </span><span class="s0">{</span><span class="s1">data.resources[</span><span class="s3">'coffee'</span><span class="s1">]</span><span class="s0">} </span><span class="s3">ml</span>
+        <span class="s3">Money: $</span><span class="s0">{</span><span class="s1">data.resources[</span><span class="s3">'money'</span><span class="s1">]</span><span class="s0">}</span>
+        <span class="s3">'''</span><span class="s1">)</span>
+        <span class="s1">done = input(</span><span class="s3">'Insert &quot;y&quot; to restart: '</span><span class="s1">)</span>
+        <span class="s0">if </span><span class="s1">done == </span><span class="s3">'y'</span><span class="s1">:</span>
+            <span class="s1">coffee_machine()</span>
+    <span class="s0">else</span><span class="s1">:</span>
+        <span class="s0">return True</span>
+
+
+<span class="s0">def </span><span class="s1">check_resources(user_choice):</span>
+    <span class="s2">&quot;&quot;&quot;Checks whether there are enough resources to complete 
+    the order and returns warnings if it does not&quot;&quot;&quot;</span>
+    <span class="s1">maintenance = </span><span class="s0">False</span>
+    <span class="s0">if </span><span class="s3">'water' </span><span class="s0">in </span><span class="s1">data.MENU[user_choice][</span><span class="s3">'ingredients'</span><span class="s1">]:</span>
+        <span class="s0">if </span><span class="s1">data.MENU[user_choice][</span><span class="s3">'ingredients'</span><span class="s1">][</span><span class="s3">'water'</span><span class="s1">] &gt; data.resources[</span><span class="s3">'water'</span><span class="s1">]:</span>
+            <span class="s1">maintenance = </span><span class="s0">True</span>
+            <span class="s1">print(</span><span class="s3">'Sorry there is not enough water.'</span><span class="s1">)</span>
+    <span class="s0">if </span><span class="s3">'milk' </span><span class="s0">in </span><span class="s1">data.MENU[user_choice][</span><span class="s3">'ingredients'</span><span class="s1">]:</span>
+        <span class="s0">if </span><span class="s1">data.MENU[user_choice][</span><span class="s3">'ingredients'</span><span class="s1">][</span><span class="s3">'milk'</span><span class="s1">] &gt; data.resources[</span><span class="s3">'milk'</span><span class="s1">]:</span>
+            <span class="s1">print(</span><span class="s3">'Sorry there is not enough milk.'</span><span class="s1">)</span>
+            <span class="s1">maintenance = </span><span class="s0">True</span>
+    <span class="s0">if </span><span class="s3">'coffee' </span><span class="s0">in </span><span class="s1">data.MENU[user_choice][</span><span class="s3">'ingredients'</span><span class="s1">]:</span>
+        <span class="s0">if </span><span class="s1">data.MENU[user_choice][</span><span class="s3">'ingredients'</span><span class="s1">][</span><span class="s3">'coffee'</span><span class="s1">] &gt; data.resources[</span><span class="s3">'coffee'</span><span class="s1">]:</span>
+            <span class="s1">print(</span><span class="s3">'Sorry there is not enough coffee.'</span><span class="s1">)</span>
+            <span class="s1">maintenance = </span><span class="s0">True</span>
+    <span class="s0">if not </span><span class="s1">maintenance:</span>
+        <span class="s0">return True</span>
+
+
+<span class="s0">def </span><span class="s1">check_coin_is_num(user_choice</span><span class="s0">, </span><span class="s1">coins):</span>
+    <span class="s2">&quot;&quot;&quot;Checks whether the amount of coins inserted is a 
+    number ad returns the total amount inserted&quot;&quot;&quot;</span>
+    <span class="s1">price = data.MENU[user_choice][</span><span class="s3">&quot;cost&quot;</span><span class="s1">]</span>
+    <span class="s0">while True</span><span class="s1">:</span>
+        <span class="s0">try</span><span class="s1">:</span>
+            <span class="s0">if </span><span class="s1">check_resources:</span>
+                <span class="s1">coins += </span><span class="s4">0.25 </span><span class="s1">* int(input(</span><span class="s3">'How many quarters?: '</span><span class="s1">))</span>
+                <span class="s0">if </span><span class="s1">coins &lt; price:</span>
+                    <span class="s1">coins += </span><span class="s4">0.10 </span><span class="s1">* int(input(</span><span class="s3">'How many dimes?: '</span><span class="s1">))</span>
+                    <span class="s0">if </span><span class="s1">coins &lt; price:</span>
+                        <span class="s1">coins += </span><span class="s4">0.5 </span><span class="s1">* int(input(</span><span class="s3">'How many nickles?: '</span><span class="s1">))</span>
+                        <span class="s0">if </span><span class="s1">coins &lt; price:</span>
+                            <span class="s1">coins += </span><span class="s4">0.1 </span><span class="s1">* int(input(</span><span class="s3">'How many pennies?: '</span><span class="s1">))</span>
+                <span class="s0">return </span><span class="s1">coins</span>
+        <span class="s0">except </span><span class="s1">ValueError:</span>
+            <span class="s1">print(</span><span class="s3">'Please enter only numbers'</span><span class="s1">)</span>
+
+
+<span class="s0">def </span><span class="s1">check_coins(user_choice):</span>
+    <span class="s2">&quot;&quot;&quot;Checks whether the amount inserted is enough to make the transaction&quot;&quot;&quot;</span>
+    <span class="s1">print(</span><span class="s3">f'The price is of a </span><span class="s0">{</span><span class="s1">user_choice</span><span class="s0">} </span><span class="s3">is $</span><span class="s0">{</span><span class="s1">data.MENU[user_choice][</span><span class="s3">&quot;cost&quot;</span><span class="s1">]</span><span class="s0">}</span><span class="s3">. Insert the coins.'</span><span class="s1">)</span>
+    <span class="s1">price = data.MENU[user_choice][</span><span class="s3">&quot;cost&quot;</span><span class="s1">]</span>
+    <span class="s1">right_amount = </span><span class="s0">True</span>
+    <span class="s1">coins = </span><span class="s4">0</span>
+    <span class="s0">while </span><span class="s1">right_amount:</span>
+        <span class="s1">coins = check_coin_is_num(user_choice</span><span class="s0">, </span><span class="s1">coins)</span>
+        <span class="s0">if </span><span class="s1">coins == price:</span>
+            <span class="s1">print(</span><span class="s3">'The amount inserted is correct.'</span><span class="s1">)</span>
+            <span class="s1">right_amount = </span><span class="s0">False</span>
+        <span class="s0">elif </span><span class="s1">coins &gt; price:</span>
+            <span class="s1">print(</span><span class="s3">f'You</span><span class="s0">\'</span><span class="s3">ve inserted $</span><span class="s0">{</span><span class="s1">coins</span><span class="s0">}</span><span class="s3">. Here is $</span><span class="s0">{</span><span class="s1">math.ceil(coins - price)</span><span class="s0">} </span><span class="s3">dollars in change.'</span><span class="s1">)</span>
+            <span class="s1">right_amount = </span><span class="s0">False</span>
+            <span class="s1">coins = price</span>
+        <span class="s0">else</span><span class="s1">:</span>
+            <span class="s1">print(</span><span class="s3">f'You</span><span class="s0">\'</span><span class="s3">ve inserted $</span><span class="s0">{</span><span class="s1">coins</span><span class="s0">}</span><span class="s3">. Insert the remaining amount of $</span><span class="s0">{</span><span class="s1">price - coins</span><span class="s0">}</span><span class="s3">'</span><span class="s1">)</span>
+
+
+<span class="s0">def </span><span class="s1">coffee_machine():</span>
+    <span class="s1">check = </span><span class="s0">True</span>
+    <span class="s0">while </span><span class="s1">check:</span>
+        <span class="s1">choice = input(title)</span>
+        <span class="s0">if </span><span class="s1">choice </span><span class="s0">not in </span><span class="s1">data.MENU:</span>
+            <span class="s1">check = </span><span class="s0">True</span>
+        <span class="s0">else</span><span class="s1">:</span>
+            <span class="s1">choice_pass = check_choice(choice)</span>
+            <span class="s0">if </span><span class="s1">choice_pass:</span>
+                <span class="s1">resources_pass = check_resources(choice)</span>
+                <span class="s0">if </span><span class="s1">resources_pass:</span>
+                    <span class="s1">check_coins(choice)</span>
+                    <span class="s0">if </span><span class="s3">'water' </span><span class="s0">in </span><span class="s1">data.MENU[choice][</span><span class="s3">'ingredients'</span><span class="s1">]:</span>
+                        <span class="s1">data.resources[</span><span class="s3">'water'</span><span class="s1">] -= data.MENU[choice][</span><span class="s3">'ingredients'</span><span class="s1">][</span><span class="s3">'water'</span><span class="s1">]</span>
+                    <span class="s0">if </span><span class="s3">'milk' </span><span class="s0">in </span><span class="s1">data.MENU[choice][</span><span class="s3">'ingredients'</span><span class="s1">]:</span>
+                        <span class="s1">data.resources[</span><span class="s3">'milk'</span><span class="s1">] -= data.MENU[choice][</span><span class="s3">'ingredients'</span><span class="s1">][</span><span class="s3">'milk'</span><span class="s1">]</span>
+                    <span class="s0">if </span><span class="s3">'coffee' </span><span class="s0">in </span><span class="s1">data.MENU[choice][</span><span class="s3">'ingredients'</span><span class="s1">]:</span>
+                        <span class="s1">data.resources[</span><span class="s3">'coffee'</span><span class="s1">] -= data.MENU[choice][</span><span class="s3">'ingredients'</span><span class="s1">][</span><span class="s3">'coffee'</span><span class="s1">]</span>
+                    <span class="s1">data.resources[</span><span class="s3">'money'</span><span class="s1">] += data.MENU[choice][</span><span class="s3">'cost'</span><span class="s1">]</span>
+                    <span class="s1">print(</span><span class="s3">f'Here is your </span><span class="s0">{</span><span class="s1">choice</span><span class="s0">}</span><span class="s3">. Enjoy!'</span><span class="s1">)</span>
+                    <span class="s1">end()</span>
+                <span class="s0">else</span><span class="s1">:</span>
+                    <span class="s1">print(</span><span class="s3">'Please alert staff.'</span><span class="s1">)</span>
+                    <span class="s1">end()</span>
+            <span class="s0">else</span><span class="s1">:</span>
+                <span class="s1">end()</span>
+
+
+<span class="s1">coffee_machine()</span>
+
+<span class="s5"># TODO: 7. Make Coffee.</span>
+<span class="s5"># a. If the transaction is successful and there are enough resources to make the drink the</span>
+<span class="s5"># user selected, then the ingredients to make the drink should be deducted from the</span>
+<span class="s5"># coffee machine resources.</span>
+<span class="s5"># E.g. report before purchasing latte:</span>
+<span class="s5"># Water: 300ml</span>
+<span class="s5"># Milk: 200ml</span>
+<span class="s5"># Coffee: 100g</span>
+<span class="s5"># Money: $0</span>
+<span class="s5"># Report after purchasing latte:</span>
+<span class="s5"># Water: 100ml</span>
+<span class="s5"># Milk: 50ml</span>
+<span class="s5"># Coffee: 76g</span>
+<span class="s5"># Money: $2.5</span>
+<span class="s5"># b. Once all resources have been deducted, tell the user “Here is your latte. Enjoy!”. If</span>
+<span class="s5"># latte was their choice of drink.</span>
+</pre>
+</body>
+</html>
